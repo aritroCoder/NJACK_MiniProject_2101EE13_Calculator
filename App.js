@@ -38,8 +38,8 @@ const App = () => {
   useEffect(() => {
     console.log("op = " + op);
     if (op.length <= 1) setSymbol(op);
-    else if(op[1]==='#') setSymbol(op[0]);
-    
+    // else if(op[1]==='#') setSymbol(op[0]);
+
     if (op.length > 0) {
       evaluate();
     }
@@ -85,46 +85,50 @@ const App = () => {
       <View style={styles.keypad}>
         <View style={styles.numbers}>
           <View style={{ flex: 1 }}>
-            <Pressable style={styles.btn} onPress={() => { setExpression(expression + 7) }}><Text style={styles.btnText}>7</Text></Pressable>
-            <Pressable style={styles.btn} onPress={() => { setExpression(expression + 4) }}><Text style={styles.btnText}>4</Text></Pressable>
-            <Pressable style={styles.btn} onPress={() => { setExpression(expression + 1) }}><Text style={styles.btnText}>1</Text></Pressable>
-            <Pressable style={styles.btn} onPress={() => { setExpression(expression + '.') }}><Text style={styles.btnText}>.</Text></Pressable>
+            <Pressable android_ripple={{ color: "#4D4C7D" }} style={styles.btn} onPress={() => { setExpression(expression + 7) }}><Text style={styles.btnText}>7</Text></Pressable>
+            <Pressable android_ripple={{ color: "#4D4C7D" }} style={styles.btn} onPress={() => { setExpression(expression + 4) }}><Text style={styles.btnText}>4</Text></Pressable>
+            <Pressable android_ripple={{ color: "#4D4C7D" }} style={styles.btn} onPress={() => { setExpression(expression + 1) }}><Text style={styles.btnText}>1</Text></Pressable>
+            <Pressable android_ripple={{ color: "#4D4C7D" }} style={styles.btn} onPress={() => { setExpression(expression + '.') }}><Text style={styles.btnText}>.</Text></Pressable>
           </View>
           <View style={{ flex: 1 }}>
-            <Pressable style={styles.btn} onPress={() => { setExpression(expression + 8) }}><Text style={styles.btnText}>8</Text></Pressable>
-            <Pressable style={styles.btn} onPress={() => { setExpression(expression + 5) }}><Text style={styles.btnText}>5</Text></Pressable>
-            <Pressable style={styles.btn} onPress={() => { setExpression(expression + 2) }}><Text style={styles.btnText}>2</Text></Pressable>
-            <Pressable style={styles.btn} onPress={() => { setExpression(expression + 0) }}><Text style={styles.btnText}>0</Text></Pressable>
+            <Pressable android_ripple={{ color: "#4D4C7D" }} style={styles.btn} onPress={() => { setExpression(expression + 8) }}><Text style={styles.btnText}>8</Text></Pressable>
+            <Pressable android_ripple={{ color: "#4D4C7D" }} style={styles.btn} onPress={() => { setExpression(expression + 5) }}><Text style={styles.btnText}>5</Text></Pressable>
+            <Pressable android_ripple={{ color: "#4D4C7D" }} style={styles.btn} onPress={() => { setExpression(expression + 2) }}><Text style={styles.btnText}>2</Text></Pressable>
+            <Pressable android_ripple={{ color: "#4D4C7D" }} style={styles.btn} onPress={() => { setExpression(expression + 0) }}><Text style={styles.btnText}>0</Text></Pressable>
           </View>
           <View style={{ flex: 1 }}>
-            <Pressable style={styles.btn} onPress={() => { setExpression(expression + 9) }}><Text style={styles.btnText}>9</Text></Pressable>
-            <Pressable style={styles.btn} onPress={() => { setExpression(expression + 6) }}><Text style={styles.btnText}>6</Text></Pressable>
-            <Pressable style={styles.btn} onPress={() => { setExpression(expression + 3) }}><Text style={styles.btnText}>3</Text></Pressable>
-            <Pressable style={styles.btn} onPress={() => { evaluate() }}><Text style={styles.btnText}>=</Text></Pressable>
+            <Pressable android_ripple={{ color: "#4D4C7D" }} style={styles.btn} onPress={() => { setExpression(expression + 9) }}><Text style={styles.btnText}>9</Text></Pressable>
+            <Pressable android_ripple={{ color: "#4D4C7D" }} style={styles.btn} onPress={() => { setExpression(expression + 6) }}><Text style={styles.btnText}>6</Text></Pressable>
+            <Pressable android_ripple={{ color: "#4D4C7D" }} style={styles.btn} onPress={() => { setExpression(expression + 3) }}><Text style={styles.btnText}>3</Text></Pressable>
+            <Pressable android_ripple={{ color: "#4D4C7D" }} style={styles.btn} onPress={() => { evaluate() }}><Text style={styles.btnText}>=</Text></Pressable>
           </View>
         </View>
         <View style={styles.operations}>
-          <Pressable style={styles.btn} onPress={() => {
+          <Pressable android_ripple={{ color: "#243d37" }} style={styles.btn} onPress={() => {
             setExpression('');
             setResult(0);
             setOp("");
             setValue(0);
-          }}><Text style={styles.btnText}>DEL</Text></Pressable>
-          <Pressable style={styles.btn} onPress={() => {
+          }}><Text style={styles.btnText}>CLEAR</Text></Pressable>
+          <Pressable android_ripple={{ color: "#243d37" }} style={styles.btn} onPress={() => {
             if (op.length === 0) setOp(op + '÷#');
             else if (op.length <= 2) setOp(op + '÷');
+            else setExpression("Unidentified expression. Press clear")
           }}><Text style={styles.btnText}>÷</Text></Pressable>
-          <Pressable style={styles.btn} onPress={() => {
+          <Pressable android_ripple={{ color: "#243d37" }} style={styles.btn} onPress={() => {
             if (op.length === 0) setOp(op + 'x#');
             else if (op.length <= 2) setOp(op + 'x');
+            else setExpression("Unidentified expression. Press clear")
           }}><Text style={styles.btnText}>x</Text></Pressable>
-          <Pressable style={styles.btn} onPress={() => {
+          <Pressable android_ripple={{ color: "#243d37" }} style={styles.btn} onPress={() => {
             if (op.length === 0) setOp(op + '-#');
             else if (op.length <= 2) setOp(op + '-');
+            else setExpression("Unidentified expression. Press clear")
           }}><Text style={styles.btnText}>-</Text></Pressable>
-          <Pressable style={styles.btn} onPress={() => {
+          <Pressable android_ripple={{ color: "#243d37" }} style={styles.btn} onPress={() => {
             if (op.length === 0) setOp(op + '+#');
             else if (op.length <= 2) setOp(op + '+');
+            else setExpression("Unidentified expression. Press clear")
           }}><Text style={styles.btnText}>+</Text></Pressable>
         </View>
       </View>
