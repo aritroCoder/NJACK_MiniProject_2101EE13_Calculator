@@ -11,73 +11,76 @@ import {
 
 const App = () => {
 
-  const [expression, setExpression] = useState('0');
-  const [value, setValue] = useState(0.0);
-  const [result, setResult] = useState(0);
-  const [operation, setOperation] = useState('')
+  //display variables
+  const [expression, setExpression] = useState('');
+  const [result, setResult] = useState('0');
+  const [final, setFinal] = useState('0');
+  const [op, setOp] = useState("");
+  const [symbol, setSymbol] = useState('');
 
+  //calculation variables
+  const [value, setValue] = useState(0);
+
+
+  //result and value should be same at all times
   useEffect(() => {
-    console.log("Value="+value +" op_len="+operation.length);
-    if (operation.length === 1){
-      setResult(value + ' ' + operation);
-      setExpression('');
-      // setOperation('');
-    }else if(operation.length === 2){
-      // evaluate();
-      setResult(value + ' ' + operation[1])
-      setOperation(operation[1]);
-      // setExpression('');
-    }
-    else 
-    setResult(value)
+    //this will show the result, so naturally we want to clear the expresion in input and operations
+    setExpression('');
+    if (op.length === 2 && op[1] === '#') setOp(op[0]);
+    else if (op.length === 2 && op[1] !== '#') setOp(op[1]);
+    else setOp("");
+    console.log("cleard op array, value= " + value);
+    setFinal(value);
+    return setResult(value);
   }, [value])
 
+  //when anything is pushed into operation, a operator is pressed and we must evaluate before expression first
   useEffect(() => {
-    console.log("pressed "+operation[operation.length-1]+" btn with value= "+value + "and operation="+ operation.length+ "and expression = "+parseFloat(expression));
-    let value2;
-    if(operation.length === 2){
-      value2=parseFloat(result); 
-      console.log("Value taken from result "+value2);
-      setValue(value2);
-      console.log("After updating state: "+value);
-      evaluate(true);
-      // setResult(value + ' ' + operation[1])
-      // setOperation('');
-      setExpression('');
-    }else if(operation.length === 1 && parseFloat(expression)){
-      value2=parseFloat(expression);
-      console.log("reading expression now: "+ value2);
-      setValue(value2);
+    console.log("op = " + op);
+    if (op.length <= 1) setSymbol(op);
+    else if(op[1]==='#') setSymbol(op[0]);
+    
+    if (op.length > 0) {
+      evaluate();
     }
-  }, [operation])
-  
+  }, [op])
 
-  function evaluate(calledFromOp){
-    let number = parseFloat(expression)
-    let op = result[result.length - 1];
-    console.log("Value="+value+" number="+number+" last_op="+op);
-    if(!calledFromOp){
-      console.log("called by = operator")
-      setOperation('');}
-    switch (op){
-      case '+': setValue(value + number)
-                break;
-      case '-': setValue(value - number)
-                break;
-      case 'x': setValue(value*number)
-                break;
-      case '÷': setValue(value/number)
-                break;
-      default:  setValue(number)
-
+  //the only function that evaluates the results. NOTE: Workflow is like {input, operator, input, operator -> TRIGGER}, so we need to evalute the second last operator
+  function evaluate() {
+    var input = parseFloat(expression);
+    if (op.length === 2 && op[1] !== '#' && input) {
+      switch (op[op.length - 2]) {
+        case '+': setValue(value + input); break;
+        case '-': setValue(value - input); break;
+        case 'x': setValue(value * input); break;
+        case '÷': setValue(value / input); break;
+        default: setValue(input); break;
+      }
+    } else if (op.length === 2 && op[1] === '#' && input) {
+      //called in cases where we have inputs like 1 + , and evaluate is called due to press of operator
+      setValue(input);
+    }
+    else if (op.length === 1 && input) {
+      //should only be invoked if I press = key after entering a operation i.e., 1+2 =  
+      switch (op[op.length - 1]) {
+        case '+': setValue(value + input); break;
+        case '-': setValue(value - input); break;
+        case 'x': setValue(value * input); break;
+        case '÷': setValue(value / input); break;
+        default: setValue(input); break;
+      }
+    } else if (op.length === 0 && input) {
+      //should only be called if I press = key without entering a operation, i.e., 1 =
+      setValue(input);
     }
   }
+
 
   return (
     <SafeAreaView style={styles.backgroundStyle}>
       <View style={styles.display}>
-        <Text style={styles.displayText}>{expression}</Text>
-        <Text style={styles.displayText}>= {result===NaN?result=0:result} </Text>
+        <Text style={styles.displayText}> {result} {symbol} {expression}</Text>
+        <Text style={styles.displayText}>= {final} </Text>
       </View>
       <View style={styles.keypad}>
         <View style={styles.numbers}>
@@ -97,24 +100,31 @@ const App = () => {
             <Pressable style={styles.btn} onPress={() => { setExpression(expression + 9) }}><Text style={styles.btnText}>9</Text></Pressable>
             <Pressable style={styles.btn} onPress={() => { setExpression(expression + 6) }}><Text style={styles.btnText}>6</Text></Pressable>
             <Pressable style={styles.btn} onPress={() => { setExpression(expression + 3) }}><Text style={styles.btnText}>3</Text></Pressable>
-            <Pressable style={styles.btn} onPress={() => {
-              evaluate(false);
-            }}><Text style={styles.btnText}>=</Text></Pressable>
+            <Pressable style={styles.btn} onPress={() => { evaluate() }}><Text style={styles.btnText}>=</Text></Pressable>
           </View>
         </View>
         <View style={styles.operations}>
-          <Pressable style={styles.btn} onPress={() => { setExpression(''); setResult('') }}><Text style={styles.btnText}>DEL</Text></Pressable>
           <Pressable style={styles.btn} onPress={() => {
-            setOperation(operation+'÷');
+            setExpression('');
+            setResult(0);
+            setOp("");
+            setValue(0);
+          }}><Text style={styles.btnText}>DEL</Text></Pressable>
+          <Pressable style={styles.btn} onPress={() => {
+            if (op.length === 0) setOp(op + '÷#');
+            else if (op.length <= 2) setOp(op + '÷');
           }}><Text style={styles.btnText}>÷</Text></Pressable>
           <Pressable style={styles.btn} onPress={() => {
-            setOperation(operation+'x');
+            if (op.length === 0) setOp(op + 'x#');
+            else if (op.length <= 2) setOp(op + 'x');
           }}><Text style={styles.btnText}>x</Text></Pressable>
           <Pressable style={styles.btn} onPress={() => {
-            setOperation(operation+'-');
+            if (op.length === 0) setOp(op + '-#');
+            else if (op.length <= 2) setOp(op + '-');
           }}><Text style={styles.btnText}>-</Text></Pressable>
           <Pressable style={styles.btn} onPress={() => {
-            setOperation(operation+'+');
+            if (op.length === 0) setOp(op + '+#');
+            else if (op.length <= 2) setOp(op + '+');
           }}><Text style={styles.btnText}>+</Text></Pressable>
         </View>
       </View>
